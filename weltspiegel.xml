@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="editors-xtd" method="upgrade">
+    <name>plg_editors-xtd_weltspiegel</name>
+    <version>0.1.0</version>
+    <creationDate>Januar 2026</creationDate>
+    <author>Michael Buchholz</author>
+    <authorEmail>mail@lean-stack.rocks</authorEmail>
+    <copyright>Weltspiegel Cottbus</copyright>
+    <license>MIT</license>
+    <description>PLG_EDITORS-XTD_WELTSPIEGEL_XML_DESCRIPTION</description>
+
+    <files>
+        <filename plugin="weltspiegel">weltspiegel.php</filename>
+        <folder>tmpl</folder>
+    </files>
+
+    <languages>
+        <language tag="de-DE">language/de-DE/plg_editors-xtd_weltspiegel.ini</language>
+        <language tag="de-DE">language/de-DE/plg_editors-xtd_weltspiegel.sys.ini</language>
+    </languages>
+
+    <updateservers>
+        <server type="extension" name="Weltspiegel Editor Button Updates">https://raw.githubusercontent.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/main/update-manifest.xml</server>
+    </updateservers>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field
+                    name="yt_responsive_default"
+                    type="radio"
+                    label="PLG_EDITORS-XTD_WELTSPIEGEL_DEFAULT_RESPONSIVE_LABEL"
+                    description="PLG_EDITORS-XTD_WELTSPIEGEL_DEFAULT_RESPONSIVE_DESC"
+                    default="1"
+                    class="btn-group"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

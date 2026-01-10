@@ -1,0 +1,23 @@
+{
+  "name": "plg_editors-xtd_weltspiegel",
+  "version": "0.1.0",
+  "description": "Weltspiegel editor button plugin for inserting YouTube video placeholders",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel.git"
+  },
+  "scripts": {
+    "build": "echo 'No assets to build for this plugin'",
+    "package": "node .build/package.mjs",
+    "release": "npm run build && npm run package",
+    "changelog": "changelogen --output CHANGELOG.md --noAuthors",
+    "release:patch": "changelogen --release --patch --push --noAuthors",
+    "release:minor": "changelogen --release --minor --push --noAuthors",
+    "release:major": "changelogen --release --major --push --noAuthors"
+  },
+  "devDependencies": {
+    "changelogen": "^0.6.2"
+  }
+}
