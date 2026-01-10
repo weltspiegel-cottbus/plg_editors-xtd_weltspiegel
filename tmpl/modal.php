@@ -16,11 +16,22 @@ use Joomla\CMS\Language\Text;
 
 ?>
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" id="modal-html">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo Text::_('PLG_EDITORS-XTD_WELTSPIEGEL_MODAL_TITLE'); ?></title>
+    <script>
+        // Inherit color scheme from parent Joomla admin
+        (function() {
+            if (window.parent && window.parent.document && window.parent.document.documentElement) {
+                const parentHtml = window.parent.document.documentElement;
+                const theme = parentHtml.getAttribute('data-color-scheme') || 'light';
+                document.documentElement.setAttribute('data-color-scheme', theme);
+                document.documentElement.setAttribute('data-bs-theme', theme);
+            }
+        })();
+    </script>
     <style>
         * {
             margin: 0;
@@ -32,6 +43,7 @@ use Joomla\CMS\Language\Text;
             font-family: system-ui, -apple-system, sans-serif;
             padding: 1.5rem;
             background: #f8f9fa;
+            color: #212529;
         }
 
         .container {
@@ -45,8 +57,23 @@ use Joomla\CMS\Language\Text;
 
         h2 {
             margin-bottom: 1.5rem;
-            color: #333;
+            color: #212529;
             font-size: 1.5rem;
+        }
+
+        /* Dark mode */
+        [data-color-scheme="dark"] body {
+            background: #222;
+            color: #dee2e6;
+        }
+
+        [data-color-scheme="dark"] .container {
+            background: #1a1d20;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        [data-color-scheme="dark"] h2 {
+            color: #f8f9fa;
         }
 
         .form-group {
@@ -57,16 +84,28 @@ use Joomla\CMS\Language\Text;
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: #555;
+            color: #495057;
+        }
+
+        [data-color-scheme="dark"] label {
+            color: #adb5bd;
         }
 
         input[type="text"] {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #ddd;
+            border: 1px solid #ced4da;
             border-radius: 0.25rem;
             font-size: 1rem;
             font-family: monospace;
+            background: #fff;
+            color: #212529;
+        }
+
+        [data-color-scheme="dark"] input[type="text"] {
+            background: #2b3035;
+            border-color: #495057;
+            color: #dee2e6;
         }
 
         input[type="text"]:focus {
@@ -75,10 +114,19 @@ use Joomla\CMS\Language\Text;
             box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
         }
 
+        [data-color-scheme="dark"] input[type="text"]:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+
         .hint {
             margin-top: 0.5rem;
             font-size: 0.875rem;
-            color: #666;
+            color: #6c757d;
+        }
+
+        [data-color-scheme="dark"] .hint {
+            color: #868e96;
         }
 
         .hint code {
@@ -88,12 +136,21 @@ use Joomla\CMS\Language\Text;
             font-family: monospace;
         }
 
+        [data-color-scheme="dark"] .hint code {
+            background: #343a40;
+            color: #dee2e6;
+        }
+
         .preview {
             margin-top: 1rem;
             padding: 1rem;
-            background: #f5f5f5;
+            background: #f8f9fa;
             border-radius: 0.25rem;
             display: none;
+        }
+
+        [data-color-scheme="dark"] .preview {
+            background: #2b3035;
         }
 
         .preview.active {
@@ -111,15 +168,23 @@ use Joomla\CMS\Language\Text;
         .preview-label {
             font-size: 0.875rem;
             font-weight: 500;
-            color: #666;
+            color: #6c757d;
             margin-bottom: 0.5rem;
         }
 
+        [data-color-scheme="dark"] .preview-label {
+            color: #adb5bd;
+        }
+
         .error {
-            color: #d32f2f;
+            color: #dc3545;
             font-size: 0.875rem;
             margin-top: 0.5rem;
             display: none;
+        }
+
+        [data-color-scheme="dark"] .error {
+            color: #ea868f;
         }
 
         .error.active {
@@ -149,7 +214,11 @@ use Joomla\CMS\Language\Text;
             justify-content: flex-end;
             margin-top: 2rem;
             padding-top: 1.5rem;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid #dee2e6;
+        }
+
+        [data-color-scheme="dark"] .actions {
+            border-top-color: #495057;
         }
 
         button {
@@ -163,26 +232,41 @@ use Joomla\CMS\Language\Text;
         }
 
         .btn-primary {
-            background: #4CAF50;
+            background: #198754;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #45a049;
+            background: #157347;
         }
 
         .btn-primary:disabled {
-            background: #ccc;
+            background: #6c757d;
             cursor: not-allowed;
         }
 
+        [data-color-scheme="dark"] .btn-primary:disabled {
+            background: #495057;
+        }
+
         .btn-secondary {
-            background: #f5f5f5;
-            color: #333;
+            background: #f8f9fa;
+            color: #212529;
+            border: 1px solid #ced4da;
         }
 
         .btn-secondary:hover {
-            background: #e0e0e0;
+            background: #e9ecef;
+        }
+
+        [data-color-scheme="dark"] .btn-secondary {
+            background: #343a40;
+            color: #f8f9fa;
+            border-color: #495057;
+        }
+
+        [data-color-scheme="dark"] .btn-secondary:hover {
+            background: #3d444b;
         }
     </style>
 </head>
