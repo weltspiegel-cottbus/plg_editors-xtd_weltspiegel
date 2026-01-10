@@ -195,13 +195,11 @@ use Joomla\CMS\Language\Text;
             <input
                 type="text"
                 id="video-id"
-                placeholder="dQw4w9WgXcQ"
-                maxlength="11"
+                placeholder="dQw4w9WgXcQ oder https://youtube.com/watch?v=dQw4w9WgXcQ"
                 autocomplete="off"
             >
             <div class="hint">
                 <?php echo Text::_('PLG_EDITORS-XTD_WELTSPIEGEL_VIDEO_ID_HINT'); ?>
-                <code>youtube.com/watch?v=<strong>dQw4w9WgXcQ</strong></code>
             </div>
             <div class="error" id="error-message"></div>
 
@@ -245,6 +243,24 @@ use Joomla\CMS\Language\Text;
             const editorName = <?php echo json_encode($editor); ?>;
 
             let debounceTimer;
+            let currentVideoId = null;
+
+            // YouTube URL regex (matches YouTubeHelper::parseYoutubeId regex)
+            const YOUTUBE_REGEX = /^(?:https?:\/\/|\/\/)?(?:www\.|m\.|.+\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|feeds\/api\/videos\/|watch\?v=|watch\?.+&v=))([\w-]{11})(?![\w-])/;
+
+            // Parse YouTube video ID from URL or return input if already an ID
+            function parseYoutubeId(input) {
+                if (!input) return null;
+
+                // Check if it's already a valid video ID
+                if (/^[a-zA-Z0-9_-]{11}$/.test(input)) {
+                    return input;
+                }
+
+                // Try to parse as URL
+                const matches = input.match(YOUTUBE_REGEX);
+                return matches ? matches[1] : null;
+            }
 
             // Validate YouTube video ID format
             function isValidVideoId(id) {
@@ -272,23 +288,31 @@ use Joomla\CMS\Language\Text;
 
             // Handle video ID input
             videoIdInput.addEventListener('input', function() {
-                const videoId = this.value.trim();
+                const input = this.value.trim();
 
                 // Clear previous debounce
                 clearTimeout(debounceTimer);
 
-                if (videoId === '') {
+                if (input === '') {
+                    currentVideoId = null;
                     insertBtn.disabled = true;
                     hideError();
                     preview.classList.remove('active');
                     return;
                 }
 
-                if (!isValidVideoId(videoId)) {
+                // Try to parse video ID from input (URL or ID)
+                const videoId = parseYoutubeId(input);
+
+                if (!videoId) {
+                    currentVideoId = null;
                     insertBtn.disabled = true;
                     showError(<?php echo json_encode(Text::_('PLG_EDITORS-XTD_WELTSPIEGEL_ERROR_INVALID_ID')); ?>);
                     return;
                 }
+
+                // Store parsed video ID
+                currentVideoId = videoId;
 
                 // Debounce preview loading
                 debounceTimer = setTimeout(() => {
@@ -299,15 +323,13 @@ use Joomla\CMS\Language\Text;
 
             // Handle insert button
             insertBtn.addEventListener('click', function() {
-                const videoId = videoIdInput.value.trim();
-
-                if (!isValidVideoId(videoId)) {
+                if (!currentVideoId) {
                     showError(<?php echo json_encode(Text::_('PLG_EDITORS-XTD_WELTSPIEGEL_ERROR_INVALID_ID')); ?>);
                     return;
                 }
 
-                // Build the placeholder
-                const placeholder = `{ytvideo ${videoId}}`;
+                // Build the placeholder with parsed video ID
+                const placeholder = `{ytvideo ${currentVideoId}}`;
 
                 // Insert into editor
                 if (window.parent.Joomla && window.parent.Joomla.editors && window.parent.Joomla.editors.instances[editorName]) {
