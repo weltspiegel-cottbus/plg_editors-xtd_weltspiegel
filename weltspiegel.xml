@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" group="editors-xtd" method="upgrade">
     <name>plg_editors-xtd_weltspiegel</name>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
     <creationDate>10.01.2026</creationDate>
     <author>Michael Buchholz</author>
     <authorEmail>mail@lean-stack.rocks</authorEmail>

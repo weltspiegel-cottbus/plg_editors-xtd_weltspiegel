@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.2.2
+
+[compare changes](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/compare/v0.2.1...v0.2.2)
+
+### 🩹 Fixes
+
+- Add english language strings. ([cb52f1b](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/commit/cb52f1b))
+
+### 🏡 Chore
+
+- Update creation date. ([906c0ad](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/commit/906c0ad))
+
 ## v0.2.1
 
 [compare changes](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/compare/v0.2.0...v0.2.1)

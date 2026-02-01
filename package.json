@@ -1,6 +1,6 @@
 {
   "name": "plg_editors-xtd_weltspiegel",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Weltspiegel editor button plugin for inserting YouTube video placeholders",
   "type": "module",
   "license": "MIT",
