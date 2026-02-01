@@ -13,9 +13,7 @@
         </downloads>
         <maintainer>Michael Buchholz</maintainer>
         <maintainerurl>https://www.weltspiegel-cottbus.de</maintainerurl>
-        <targetplatform name="joomla" version="5.*"/>
         <targetplatform name="joomla" version="6.*"/>
-        <client>administrator</client>
         <php_minimum>8.1</php_minimum>
     </update>
 </updates>
