@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.3.0
+
+[compare changes](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/compare/v0.2.2...v0.3.0)
+
+### 🚀 Enhancements
+
+- Add second option to insert image galleries. ([723d03b](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/commit/723d03b))
+
+### 🏡 Chore
+
+- Fix update manifest. ([d9c36c9](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/commit/d9c36c9))
+
 ## v0.2.2
 
 [compare changes](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/compare/v0.2.1...v0.2.2)
