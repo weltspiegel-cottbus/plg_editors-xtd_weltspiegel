@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.3.1
+
+[compare changes](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/compare/v0.3.0...v0.3.1)
+
+### 🩹 Fixes
+
+- Update targetplatform. ([f7a683a](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/commit/f7a683a))
+
+### 🏡 Chore
+
+- Format and lint files. ([d4496b6](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/commit/d4496b6))
+
 ## v0.3.0
 
 [compare changes](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/compare/v0.2.2...v0.3.0)
