@@ -53,8 +53,8 @@ After installation, configure the plugin at **System → Plugins → Editor Butt
 2. **Position cursor** where you want to insert the video
 3. **Click "YouTube Video" button** below the editor
 4. **Enter the video ID**:
-   - From URL `https://www.youtube.com/watch?v=dQw4w9WgXcQ`
-   - Extract the 11-character ID: `dQw4w9WgXcQ`
+    - From URL `https://www.youtube.com/watch?v=dQw4w9WgXcQ`
+    - Extract the 11-character ID: `dQw4w9WgXcQ`
 5. **Preview appears** automatically as you type
 6. **Optional**: Toggle responsive setting
 7. **Click "Einfügen"** to insert `{ytvideo dQw4w9WgXcQ}` into your article
@@ -114,6 +114,7 @@ npm run release:major
 ```
 
 These commands:
+
 - Bump version in `package.json`
 - Generate/update `CHANGELOG.md`
 - Create git tag
@@ -146,6 +147,7 @@ plg_editors-xtd_weltspiegel/
 ### Plugin Type: editors-xtd
 
 This is an `editors-xtd` plugin, which is Joomla's standard way to add buttons below editors. These plugins:
+
 - Appear below the editor field
 - Can open modal popups
 - Can insert content at the cursor position
@@ -154,6 +156,7 @@ This is an `editors-xtd` plugin, which is Joomla's standard way to add buttons b
 ### Modal Implementation
 
 The modal is rendered via AJAX call to maintain security:
+
 - Token verification via Joomla's Session class
 - Clean separation between button display and modal content
 - Self-contained HTML/CSS/JavaScript in modal template
@@ -161,6 +164,7 @@ The modal is rendered via AJAX call to maintain security:
 ### JavaScript Integration
 
 The plugin uses Joomla's native editor API:
+
 ```javascript
 window.parent.Joomla.editors.instances[editorName].replaceSelection(content);
 ```
