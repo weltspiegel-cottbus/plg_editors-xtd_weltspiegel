@@ -34,6 +34,23 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
         border-radius: var(--bs-border-radius);
     }
 
+    .gallery-preview__thumb--selectable {
+        cursor: pointer;
+        opacity: 0.35;
+        transition: opacity 0.15s;
+    }
+
+    .gallery-preview__thumb--selectable:hover {
+        opacity: 0.65;
+    }
+
+    .gallery-preview__thumb--selected,
+    .gallery-preview__thumb--selected:hover {
+        opacity: 1;
+        outline: 3px solid var(--bs-primary);
+        outline-offset: 2px;
+    }
+
     .folder-icon {
         color: #f29400;
     }
@@ -120,6 +137,26 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
                 <span class="small fw-medium text-body-secondary" id="gallery-count"></span>
             </div>
             <div class="gallery-preview__grid p-2 bg-body-secondary rounded" id="gallery-grid"></div>
+
+            <!-- Teaser Options -->
+            <div class="d-none mt-3 pt-3 border-top" id="gallery-teaser-section">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gallery-teaser-enabled">
+                    <label class="form-check-label fw-medium" for="gallery-teaser-enabled">Titelbild anzeigen</label>
+                </div>
+                <div class="d-none mt-2 ms-3" id="gallery-teaser-options">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="gallery-teaser-mode" id="gallery-teaser-random" value="random" checked>
+                        <label class="form-check-label" for="gallery-teaser-random">Zufällig</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="gallery-teaser-mode" id="gallery-teaser-specific" value="specific">
+                        <label class="form-check-label" for="gallery-teaser-specific">
+                            Bestimmtes Bild <span class="text-body-secondary small">&ndash; Bild oben auswählen</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -249,12 +286,22 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
         let currentGalleryPath = [];
         let selectedGalleryPath = null;
 
+        // Teaser state
+        let teaserEnabled = false;
+        let teaserMode = 'random';       // 'random' | 'specific'
+        let selectedTeaserFile = null;   // null | filename string
+
         const foldersContainer = document.getElementById('gallery-folders');
         const breadcrumbContainer = document.getElementById('gallery-breadcrumb');
         const galleryPreview = document.getElementById('gallery-preview');
         const galleryPath = document.getElementById('gallery-path');
         const galleryCount = document.getElementById('gallery-count');
         const galleryGrid = document.getElementById('gallery-grid');
+        const teaserSection = document.getElementById('gallery-teaser-section');
+        const teaserEnabledCheckbox = document.getElementById('gallery-teaser-enabled');
+        const teaserOptionsDiv = document.getElementById('gallery-teaser-options');
+        const teaserRandomRadio = document.getElementById('gallery-teaser-random');
+        const teaserSpecificRadio = document.getElementById('gallery-teaser-specific');
 
         const folderIcon = '<svg class="folder-icon flex-shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">'
             + '<path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3H13.5a2 2 0 0 1 2 2v1H8.032a2 2 0 0 0-1.414.586L5.5 7.707V4.5a1 1 0 0 0-1-1H1.996L.54 3.87z"/>'
@@ -290,10 +337,62 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
             loadImages(path);
         }
 
+        function resetTeaser() {
+            teaserEnabled = false;
+            teaserMode = 'random';
+            selectedTeaserFile = null;
+            teaserEnabledCheckbox.checked = false;
+            teaserRandomRadio.checked = true;
+            teaserOptionsDiv.classList.add('d-none');
+            teaserSection.classList.add('d-none');
+            setThumbnailsSelectable(false);
+        }
+
+        function setThumbnailsSelectable(selectable) {
+            galleryGrid.querySelectorAll('.gallery-preview__thumb').forEach(img => {
+                img.classList.toggle('gallery-preview__thumb--selectable', selectable);
+                if (!selectable) {
+                    img.classList.remove('gallery-preview__thumb--selected');
+                }
+            });
+        }
+
+        teaserEnabledCheckbox.addEventListener('change', function () {
+            teaserEnabled = this.checked;
+            teaserOptionsDiv.classList.toggle('d-none', !teaserEnabled);
+            if (!teaserEnabled) {
+                selectedTeaserFile = null;
+                setThumbnailsSelectable(false);
+            } else {
+                teaserMode = 'random';
+                teaserRandomRadio.checked = true;
+            }
+            updateInsertButton();
+        });
+
+        teaserRandomRadio.addEventListener('change', function () {
+            if (this.checked) {
+                teaserMode = 'random';
+                selectedTeaserFile = null;
+                setThumbnailsSelectable(false);
+                updateInsertButton();
+            }
+        });
+
+        teaserSpecificRadio.addEventListener('change', function () {
+            if (this.checked) {
+                teaserMode = 'specific';
+                selectedTeaserFile = null;
+                setThumbnailsSelectable(true);
+                updateInsertButton();
+            }
+        });
+
         function loadImages(path) {
             if (path === '') {
                 galleryPreview.classList.add('d-none');
                 selectedGalleryPath = null;
+                resetTeaser();
                 updateInsertButton();
                 return;
             }
@@ -303,6 +402,7 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
                 .then(images => {
                     galleryPreview.classList.remove('d-none');
                     galleryPath.textContent = 'images/' + path;
+                    resetTeaser();
 
                     if (images.length === 0) {
                         galleryCount.textContent = <?php echo json_encode(Text::_('PLG_EDITORS-XTD_WELTSPIEGEL_GALLERY_NO_IMAGES')); ?>;
@@ -314,14 +414,25 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
                         galleryCount.textContent = images.length + ' <?php echo Text::_('PLG_EDITORS-XTD_WELTSPIEGEL_GALLERY_IMAGE_COUNT'); ?>';
                         galleryGrid.innerHTML = '';
                         images.forEach(src => {
+                            const filename = src.split('/').pop();
                             const img = document.createElement('img');
                             img.className = 'gallery-preview__thumb';
                             img.src = '<?php echo \Joomla\CMS\Uri\Uri::root(); ?>' + src;
-                            img.alt = src.split('/').pop();
+                            img.alt = filename;
                             img.loading = 'lazy';
+                            img.dataset.filename = filename;
+                            img.addEventListener('click', () => {
+                                if (!img.classList.contains('gallery-preview__thumb--selectable')) return;
+                                galleryGrid.querySelectorAll('.gallery-preview__thumb--selected')
+                                    .forEach(el => el.classList.remove('gallery-preview__thumb--selected'));
+                                img.classList.add('gallery-preview__thumb--selected');
+                                selectedTeaserFile = filename;
+                                updateInsertButton();
+                            });
                             galleryGrid.appendChild(img);
                         });
                         selectedGalleryPath = 'images/' + path;
+                        teaserSection.classList.remove('d-none');
                     }
 
                     updateInsertButton();
@@ -329,6 +440,7 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
                 .catch(() => {
                     galleryPreview.classList.add('d-none');
                     selectedGalleryPath = null;
+                    resetTeaser();
                     updateInsertButton();
                 });
         }
@@ -398,7 +510,8 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
                 insertBtn.disabled = !currentVideoId;
                 insertBtn.textContent = <?php echo json_encode(Text::_('PLG_EDITORS-XTD_WELTSPIEGEL_INSERT_BUTTON')); ?>;
             } else {
-                insertBtn.disabled = !selectedGalleryPath;
+                const needsTeaserFile = teaserEnabled && teaserMode === 'specific' && !selectedTeaserFile;
+                insertBtn.disabled = !selectedGalleryPath || needsTeaserFile;
                 insertBtn.textContent = <?php echo json_encode(Text::_('PLG_EDITORS-XTD_WELTSPIEGEL_GALLERY_INSERT')); ?>;
             }
         }
@@ -414,7 +527,12 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
                 placeholder = `{ytvideo ${currentVideoId}}`;
             } else {
                 if (!selectedGalleryPath) return;
-                placeholder = `{gallery ${selectedGalleryPath}}`;
+                let teaserSuffix = '';
+                if (teaserEnabled) {
+                    const teaserValue = teaserMode === 'random' ? 'random' : selectedTeaserFile;
+                    if (teaserValue) teaserSuffix = '|teaser=' + teaserValue;
+                }
+                placeholder = `{gallery ${selectedGalleryPath}${teaserSuffix}}`;
             }
 
             if (window.parent.Joomla && window.parent.Joomla.editors && window.parent.Joomla.editors.instances[editorName]) {
