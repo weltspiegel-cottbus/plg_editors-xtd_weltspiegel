@@ -138,6 +138,17 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
             </div>
             <div class="gallery-preview__grid p-2 bg-body-secondary rounded" id="gallery-grid"></div>
 
+            <!-- Alt Text Option -->
+            <div class="d-none mt-3 pt-3 border-top" id="gallery-altnames-section">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gallery-altnames">
+                    <label class="form-check-label" for="gallery-altnames">
+                        Alt-Texte aus Bildnamen lesen
+                        <span class="text-body-secondary small d-block">Standard: Artikelname + Bildnummer</span>
+                    </label>
+                </div>
+            </div>
+
             <!-- Teaser Options -->
             <div class="d-none mt-3 pt-3 border-top" id="gallery-teaser-section">
                 <div class="form-check">
@@ -286,6 +297,16 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
         let currentGalleryPath = [];
         let selectedGalleryPath = null;
 
+        // Alt names state
+        let altNamesEnabled = false;
+
+        const altNamesSection = document.getElementById('gallery-altnames-section');
+        const altNamesCheckbox = document.getElementById('gallery-altnames');
+
+        altNamesCheckbox.addEventListener('change', function () {
+            altNamesEnabled = this.checked;
+        });
+
         // Teaser state
         let teaserEnabled = false;
         let teaserMode = 'random';       // 'random' | 'specific'
@@ -345,6 +366,9 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
             teaserRandomRadio.checked = true;
             teaserOptionsDiv.classList.add('d-none');
             teaserSection.classList.add('d-none');
+            altNamesEnabled = false;
+            altNamesCheckbox.checked = false;
+            altNamesSection.classList.add('d-none');
             setThumbnailsSelectable(false);
         }
 
@@ -432,6 +456,7 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
                             galleryGrid.appendChild(img);
                         });
                         selectedGalleryPath = 'images/' + path;
+                        altNamesSection.classList.remove('d-none');
                         teaserSection.classList.remove('d-none');
                     }
 
@@ -527,12 +552,13 @@ $ajaxBase = 'index.php?option=com_ajax&plugin=weltspiegel&group=editors-xtd&form
                 placeholder = `{ytvideo ${currentVideoId}}`;
             } else {
                 if (!selectedGalleryPath) return;
-                let teaserSuffix = '';
+                let options = '';
+                if (altNamesEnabled) options += '|altnames';
                 if (teaserEnabled) {
                     const teaserValue = teaserMode === 'random' ? 'random' : selectedTeaserFile;
-                    if (teaserValue) teaserSuffix = '|teaser=' + teaserValue;
+                    if (teaserValue) options += '|teaser=' + teaserValue;
                 }
-                placeholder = `{gallery ${selectedGalleryPath}${teaserSuffix}}`;
+                placeholder = `{gallery ${selectedGalleryPath}${options}}`;
             }
 
             if (window.parent.Joomla && window.parent.Joomla.editors && window.parent.Joomla.editors.instances[editorName]) {
