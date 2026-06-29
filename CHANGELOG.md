@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v1.0.0
+
+[compare changes](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/compare/v0.3.1...v1.0.0)
+
+### 🚀 Enhancements
+
+- Allow selection of teaser image for galleries. ([a97a6af](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/commit/a97a6af))
+- Add option for alt-text handling. ([482e98e](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/commit/482e98e))
+
 ## v0.3.1
 
 [compare changes](https://github.com/weltspiegel-cottbus/plg_editors-xtd_weltspiegel/compare/v0.3.0...v0.3.1)

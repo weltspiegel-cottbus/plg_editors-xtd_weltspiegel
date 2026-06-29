@@ -1,6 +1,6 @@
 {
   "name": "plg_editors-xtd_weltspiegel",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "Weltspiegel editor button plugin for inserting media placeholders (YouTube, Gallery)",
   "license": "MIT",
   "repository": {
